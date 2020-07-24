@@ -1,0 +1,4 @@
+django-crispy-forms
+django-ckeditor
+Pillow
+psycopg2

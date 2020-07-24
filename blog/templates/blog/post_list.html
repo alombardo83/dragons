@@ -1,0 +1,32 @@
+{% extends "base.html" %} 
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-12 mt-4">
+            {% for post in post_list %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+                    <!--<p class="card-text">{{post.content|safe|slice:":200" }}...</p>-->
+                    <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">En lire plus &rarr;</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% if is_paginated %}
+      <nav aria-label="Page navigation container">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PRECEDENT </a></li>
+          {% endif %}
+          {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> SUIVANT &raquo;</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+</div>
+{%endblock%}
