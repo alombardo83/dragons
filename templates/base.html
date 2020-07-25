@@ -25,8 +25,8 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="collapse navbar-collapse" id="mainNavbar">
-                <ul class="navbar-nav mr-auto">
+            <div class="navbar-collapse collapse mr-5 pr-5" id="mainNavbar">
+                <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'post_list' %}">Blog</a>
                     </li>
@@ -36,6 +36,7 @@
                             {{ user.get_username }}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'profile' %}">Mon Profil</a>
                             {% if user.is_staff %}
                                 <a class="dropdown-item" href="/admin">Administration</a>
                             {% endif %}
