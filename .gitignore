@@ -1,5 +1,9 @@
-/db.sqlite3
-/static_dragons/admin
-/static_dragons/ckeditor
+*.pyc
+*~
+/.vscode
+__pycache__
+db.sqlite3
+/static_dragons
+.DS_Store
 /media_dragons/uploads/*
-/dragons
+/dragons/settings.py
