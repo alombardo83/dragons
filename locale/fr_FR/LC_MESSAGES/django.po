@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-15 22:27+0100\n"
+"POT-Creation-Date: 2020-07-26 22:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,6 +61,82 @@ msgstr "commentaire"
 msgid "comments"
 msgstr "commentaires"
 
+#: contacts/models.py:5
+#, fuzzy
+#| msgid "first_name"
+msgid "first name"
+msgstr "prénom"
+
+#: contacts/models.py:6
+#, fuzzy
+#| msgid "last_name"
+msgid "last name"
+msgstr "nom"
+
+#: contacts/models.py:7
+msgid "birthdate"
+msgstr "date de naissance"
+
+#: contacts/models.py:8
+msgid "phone"
+msgstr "téléphone"
+
+#: contacts/models.py:9 core/models.py:11
+msgid "email"
+msgstr "email"
+
+#: contacts/models.py:12
+msgid "person"
+msgstr "personne"
+
+#: contacts/models.py:13
+msgid "people"
+msgstr "personnes"
+
+#: contacts/models.py:23
+msgid "field 1"
+msgstr "champ 1"
+
+#: contacts/models.py:24
+msgid "field 2"
+msgstr "champ 2"
+
+#: contacts/models.py:25
+msgid "field 3"
+msgstr "champ 3"
+
+#: contacts/models.py:26
+msgid "postal code"
+msgstr "code postal"
+
+#: contacts/models.py:27
+msgid "city"
+msgstr "ville"
+
+#: contacts/models.py:30
+msgid "address"
+msgstr "adresse"
+
+#: contacts/models.py:31
+msgid "addresses"
+msgstr "adresses"
+
+#: core/forms.py:8 core/forms.py:17
+#, fuzzy
+#| msgid "first_name"
+msgid "First Name"
+msgstr "prénom"
+
+#: core/forms.py:9 core/forms.py:18
+msgid "Last Name"
+msgstr "nom"
+
+#: core/forms.py:10 core/forms.py:19
+#, fuzzy
+#| msgid "email"
+msgid "Email"
+msgstr "email"
+
 #: core/models.py:9
 msgid "first_name"
 msgstr "prénom"
@@ -68,7 +144,3 @@ msgstr "prénom"
 #: core/models.py:10
 msgid "last_name"
 msgstr "nom"
-
-#: core/models.py:11
-msgid "email"
-msgstr "email"
