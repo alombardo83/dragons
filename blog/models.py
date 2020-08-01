@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.translation import gettext as _
 
@@ -24,8 +22,9 @@ class Post(models.Model):
         permissions = (('can_publish', 'Set a post as published'),)
         verbose_name = _('post')
         verbose_name_plural = _('posts')
-        def __str__(self):
-            return self.title
+
+    def __str__(self):
+        return self.title
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
@@ -38,6 +37,7 @@ class Comment(models.Model):
         ordering = ['-created_on']
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
-        def __str__(self):
-            return 'Comment {} by {}'.format(self.body, self.author.get_username)
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.author.get_username)
 

@@ -11,8 +11,9 @@ class Person(models.Model):
     class Meta:
         verbose_name = _('person')
         verbose_name_plural = _('people')
-        def __str__(self):
-            return '{} {}'.format(self.first_name, self.last_name)
+
+    def __str__(self):
+        return '{} {}'.format(self.first_name, self.last_name)
 
 class Address(models.Model):
     person = models.OneToOneField(
@@ -21,8 +22,8 @@ class Address(models.Model):
         primary_key=True,
     )
     field1 = models.CharField(_('field 1'), max_length=38)
-    field2 = models.CharField(_('field 2'), max_length=38)
-    field3 = models.CharField(_('field 3'), max_length=38)
+    field2 = models.CharField(_('field 2'), max_length=38, null=True, blank=True)
+    field3 = models.CharField(_('field 3'), max_length=38, null=True, blank=True)
     postal_code = models.CharField(_('postal code'), max_length=5)
     city = models.CharField(_('city'), max_length=32)
 
