@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'top14/css/index.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-4">
+            <select class="form-control" id="roundSelect">
+                {% for match in matches %}
+                    <option value="{{ match.round }}">{{ match.round_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12 mt-5">
+            {% for match in matches %}
+                <div class="match-pane" id="{{ match.round }}">
+                    {% for m in match.matches %}
+                        <div class="row justify-content-center mt-1 match-row">
+                            {% if m.played %}
+                                <div class="col-md-1">
+                                    {% if m.bonus_offensive_team1 %}
+                                        <img class="float-left bonus-icon" src="{% static 'top14/img/offensive_bonus.png' %}" />
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                    {% if m.bonus_defensive_team1 %}
+                                        <img class="float-right bonus-icon" src="{% static 'top14/img/defensive_bonus.png' %}" />
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-1">
+                                    <img class="logo-team" src="{% get_static_prefix %}top14/img/teams/{{ m.short_name_team1|lower }}.png" />
+                                </div>
+                                <div class="col-md-2">{{ m.name_team1 }}</div>
+                                <div class="col-md-2">{{ m.score_team1 }} - {{ m.score_team2 }}</div>
+                                <div class="col-md-2">{{ m.name_team2 }}</div>
+                                <div class="col-md-1">
+                                    <img class="logo-team" src="{% get_static_prefix %}top14/img/teams/{{ m.short_name_team2|lower }}.png" />
+                                </div>
+                                <div class="col-md-1">
+                                    {% if m.bonus_defensive_team2 %}
+                                        <img class="float-left bonus-icon" src="{% static 'top14/img/defensive_bonus.png' %}" />
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                    {% if m.bonus_offensive_team2 %}
+                                        <img class="float-right bonus-icon" src="{% static 'top14/img/offensive_bonus.png' %}" />
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="col-md-1">
+                                    <img class="logo-team" src="{% get_static_prefix %}top14/img/teams/{{ m.short_name_team1|lower }}.png" />
+                                </div>
+                                <div class="col-md-2">{{ m.name_team1 }}</div>
+                                <div class="col-md-2"><p class="text-secondary">{{ m.date_time|date:'d/m/Y H:i' }}</p></div>
+                                <div class="col-md-2">{{ m.name_team2 }}</div>
+                                <div class="col-md-1">
+                                    <img class="logo-team" src="{% get_static_prefix %}top14/img/teams/{{ m.short_name_team2|lower }}.png" />
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{%endblock%}
+
+{% block scripts %}
+<script>
+    $('#roundSelect').on('change', function() {
+        $('.match-pane').hide();
+        $('#' + this.value).show();
+    });
+    
+    $('#roundSelect').change();
+</script>
+{% endblock scripts %}
