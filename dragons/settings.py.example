@@ -29,6 +29,13 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+CREATED_APPS = [
+    'core',
+    'blog',
+    'contacts',
+    'membership',
+    'top14',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,13 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
-    'blog',
-    'contacts',
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
-]
+] + CREATED_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

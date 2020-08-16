@@ -17,6 +17,7 @@ class Team(models.Model):
     short_name = models.CharField(_('short_name'), max_length=10)
     penalty_points = models.IntegerField(_('penalty points'), default=0)
     active = models.BooleanField(default=False)
+    last_ranking = models.IntegerField(_('ranking last season'), default=0)
     
     class Meta:
         verbose_name = _('team')
@@ -73,6 +74,8 @@ class Match(models.Model):
     yellow_cards2 = models.IntegerField(_('away yellow cards'), default=0)
     red_cards1 = models.IntegerField(_('home red cards'), default=0)
     red_cards2 = models.IntegerField(_('away red cards'), default=0)
+    withdrawn_team1 = models.BooleanField(default=False)
+    withdrawn_team2 = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = _('match')
