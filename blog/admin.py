@@ -17,7 +17,7 @@ class CommentAdmin(admin.ModelAdmin):
 
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
-    approve_comments.short_description = "Approve selected comments"
+    approve_comments.short_description = 'Approuvé les commentaires sélectionnés'
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):

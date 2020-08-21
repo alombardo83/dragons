@@ -37,6 +37,8 @@ class MatchAdmin(admin.ModelAdmin):
 
     def get_team1_name(self, obj):
         return obj.team1.name
+    get_team1_name.short_description = 'Nom équipe domicile'
 
     def get_team2_name(self, obj):
         return obj.team2.name
+    get_team2_name.short_description = 'Nom équipe extérieur'

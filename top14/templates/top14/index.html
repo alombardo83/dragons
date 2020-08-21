@@ -75,6 +75,43 @@
             {% endfor %}
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-md-12 mt-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Equipe</th>
+                      <th scope="col">Points</th>
+                      <th scope="col">J.</th>
+                      <th scope="col">G.</th>
+                      <th scope="col">N.</th>
+                      <th scope="col">P.</th>
+                      <th scope="col">BO</th>
+                      <th scope="col">BD</th>
+                      <th scope="col">Diff</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for team in ranking %}
+                    <tr>
+                        <td>{{ forloop.counter }}</th>
+                        <td>{{ team.name }}</td>
+                        <td>{{ team.nb_points }}</td>
+                        <td>{{ team.nb_played }}</td>
+                        <td>{{ team.nb_won }}</td>
+                        <td>{{ team.nb_draw }}</td>
+                        <td>{{ team.nb_lost }}</td>
+                        <td>{{ team.nb_bonus_offensive }}</td>
+                        <td>{{ team.nb_bonus_defensive }}</td>
+                        <td>{{ team.diff }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 {%endblock%}
 

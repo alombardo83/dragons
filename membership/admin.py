@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.db.models import Max
 from .models import Period, MembershipPeriod, Member
-from django.utils.translation import gettext as _
 from datetime import datetime
 
 @admin.register(Period)
@@ -16,7 +15,7 @@ class MembershipPeriodInline(admin.StackedInline):
         (None, {
             'fields': ('period',)
         }),
-        (_('more'), {
+        ('plus', {
             'classes': ('collapse',),
             'fields': ('comment',),
         }),
@@ -54,12 +53,12 @@ class MemberAdmin(admin.ModelAdmin):
         else:
             return False
     
-    get_last_name.short_description = _('Last Name')
+    get_last_name.short_description = 'Nom'
     get_last_name.admin_order_field = 'person__last_name'
     
-    get_first_name.short_description = _('First Name')
+    get_first_name.short_description = 'Prénom'
     get_first_name.admin_order_field = 'person__first_name'
     
-    is_active.short_description = _('Membership active')
+    is_active.short_description = 'Adhésion active'
     is_active.admin_order_field = 'is_active'
     is_active.boolean = True
