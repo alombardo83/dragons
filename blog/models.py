@@ -15,6 +15,7 @@ class Post(models.Model):
     content = RichTextUploadingField('contenu', )
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField('statut', choices=STATUS, default=0)
+    description = models.CharField('description', max_length=200)
 
     class Meta:
         ordering = ['-created_on']

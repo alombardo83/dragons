@@ -1,7 +1,14 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block content %}
 
+{% block meta %}
+<meta property="og:url" content="{% url 'post_detail' post.slug  %}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ post.title }}" />
+<meta property="og:description" content="{{ post.description }}" />
+{% endblock meta %}
+
+{% block content %}
 <div class="container">
   <div class="row">
     <div class="col-md-12 card mb-6  mt-4 left  top">

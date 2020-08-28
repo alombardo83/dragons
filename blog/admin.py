@@ -29,9 +29,9 @@ class PostAdmin(admin.ModelAdmin):
     
     def get_form(self, request, obj=None, **kwargs):
         if not self.has_publish_permission(request):
-            self.fields = ('title', 'slug', 'content')
+            self.fields = ('title', 'slug', 'description', 'content')
         else:
-            self.fields = ('title', 'slug', 'status', 'content')
+            self.fields = ('title', 'slug', 'description', 'status', 'content')
         return super(PostAdmin, self).get_form(request, obj, **kwargs)
 
     def has_publish_permission(self, request):
