@@ -22,6 +22,7 @@ def index(request):
         ranking.append(TeamDisplay(t))
     
     display_matches = []
+    active_round = 1
     for num_round, name_round in ROUNDS:
         round_matches = {
             'round': num_round,
@@ -34,6 +35,7 @@ def index(request):
             m = MatchDisplay(match)
             round_matches['matches'].append(m)
             if m.played:
+                active_round = num_round
                 team1 = list(filter(lambda t: (t.id == match.team1.id), ranking))[0]
                 team2 = list(filter(lambda t: (t.id == match.team2.id), ranking))[0]
                 team1._compute_match_results(m.score_team1, m.score_team2, m.bonus_offensive_team1, m.bonus_defensive_team1, m.withdrawn_team1, match.tries1, match.tries2)
@@ -42,7 +44,7 @@ def index(request):
         display_matches.append(round_matches)
 
     ranking.sort()
-    return render(request, template_name, {'matches': display_matches, 'ranking': ranking})
+    return render(request, template_name, {'matches': display_matches, 'ranking': ranking, 'active_round': active_round-1})
 
 @total_ordering
 class TeamDisplay():
