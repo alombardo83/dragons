@@ -2,15 +2,7 @@ from django.shortcuts import render
 from datetime import datetime
 from functools import total_ordering
 from .models import Season, Match, Team, ROUNDS
-
-def _calculate_score(drops, penalties, tries, conversions):
-    return 3 * drops + 3 * penalties + 5 * tries + 2 * conversions
-
-def _calculate_bonus_offensive(tries1, tries2):
-    return tries1 >= tries2 + 3
-
-def _calculate_bonus_defensive(score1, score2):
-    return score1 < score2 and score1 + 5 >= score2
+from . import helpers
 
 def index(request):
     template_name = 'top14/index.html'
@@ -88,8 +80,8 @@ class TeamDisplay():
         
         try:
             match = Match.objects.filter(season__id=season.id, played=True, team1__id=self.id, team2__id=other.id).get()
-            score_team1 = _calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
-            score_team2 = _calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
+            score_team1 = helpers.calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
+            score_team2 = helpers.calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
             
             diff_team1 += (score_team1 - score_team2)
             diff_team2 += (score_team2 - score_team1)
@@ -106,16 +98,16 @@ class TeamDisplay():
                 nb_points_team1 += 2
                 nb_points_team2 += 2
             
-            if _calculate_bonus_offensive(match.tries1, match.tries2):
+            if helpers.calculate_bonus_offensive(match.tries1, match.tries2):
                 nb_points_team1 += 1
             
-            if _calculate_bonus_defensive(score_team1, score_team2):
+            if helpers.calculate_bonus_defensive(score_team1, score_team2):
                 nb_points_team1 += 1
             
-            if _calculate_bonus_offensive(match.tries2, match.tries1):
+            if helpers.calculate_bonus_offensive(match.tries2, match.tries1):
                 nb_points_team2 += 1
             
-            if _calculate_bonus_defensive(score_team2, score_team1):
+            if helpers.calculate_bonus_defensive(score_team2, score_team1):
                 nb_points_team2 += 1
             
             if match.withdrawn_team1:
@@ -128,8 +120,8 @@ class TeamDisplay():
         
         try:
             match = Match.objects.filter(season__id=season.id, played=True, team2__id=self.id, team1__id=other.id).get()
-            score_team1 = _calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
-            score_team2 = _calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
+            score_team1 = helpers.calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
+            score_team2 = helpers.calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
             
             diff_team1 += (score_team1 - score_team2)
             diff_team2 += (score_team2 - score_team1)
@@ -146,16 +138,16 @@ class TeamDisplay():
                 nb_points_team1 += 2
                 nb_points_team2 += 2
             
-            if _calculate_bonus_offensive(match.tries1, match.tries2):
+            if helpers.calculate_bonus_offensive(match.tries1, match.tries2):
                 nb_points_team1 += 1
             
-            if _calculate_bonus_defensive(score_team1, score_team2):
+            if helpers.calculate_bonus_defensive(score_team1, score_team2):
                 nb_points_team1 += 1
             
-            if _calculate_bonus_offensive(match.tries2, match.tries1):
+            if helpers.calculate_bonus_offensive(match.tries2, match.tries1):
                 nb_points_team2 += 1
             
-            if _calculate_bonus_defensive(score_team2, score_team1):
+            if helpers.calculate_bonus_defensive(score_team2, score_team1):
                 nb_points_team2 += 1
             
             if match.withdrawn_team1:
@@ -249,11 +241,11 @@ class MatchDisplay():
         self.name_team2 = match.team2.name
         self.short_name_team1 = match.team1.short_name
         self.short_name_team2 = match.team2.short_name
-        self.score_team1 = _calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
-        self.score_team2 = _calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
-        self.bonus_offensive_team1 = _calculate_bonus_offensive(match.tries1, match.tries2)
-        self.bonus_offensive_team2 = _calculate_bonus_offensive(match.tries2, match.tries1)
-        self.bonus_defensive_team1 = _calculate_bonus_defensive(self.score_team1, self.score_team2)
-        self.bonus_defensive_team2 = _calculate_bonus_defensive(self.score_team2, self.score_team1)
+        self.score_team1 = helpers.calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
+        self.score_team2 = helpers.calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
+        self.bonus_offensive_team1 = helpers.calculate_bonus_offensive(match.tries1, match.tries2)
+        self.bonus_offensive_team2 = helpers.calculate_bonus_offensive(match.tries2, match.tries1)
+        self.bonus_defensive_team1 = helpers.calculate_bonus_defensive(self.score_team1, self.score_team2)
+        self.bonus_defensive_team2 = helpers.calculate_bonus_defensive(self.score_team2, self.score_team1)
         self.withdrawn_team1 = match.withdrawn_team1
         self.withdrawn_team2 = match.withdrawn_team2
