@@ -16,6 +16,7 @@ class Post(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField('statut', choices=STATUS, default=0)
     description = models.CharField('description', max_length=200)
+    newsletter_sended = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created_on']

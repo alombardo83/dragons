@@ -1,5 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth import get_permission_codename
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.conf import settings
+from core.models import Profile
 from .models import Post, Comment
 
 @admin.register(Comment)
@@ -42,4 +46,23 @@ class PostAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.author = request.user
+        
+        send_newsletter = (not obj.newsletter_sended) and (obj.status == 1) and ((not obj.pk) or (form.has_changed() and 'status' in form.changed_data))
         super().save_model(request, obj, form, change)
+        
+        if send_newsletter:
+            current_site = get_current_site(request)
+            subject = 'Newsletter - ' + obj.title
+        
+            profiles = Profile.objects.filter(signup_confirmation=True, newsletter_subscription=True).all()
+            for profile in profiles:
+                message = render_to_string('blog/newsletter.html', {
+                    'profile': profile,
+                    'protocol': settings.PROTOCOL,
+                    'domain': current_site.domain,
+                    'post': obj,
+                })
+                profile.user.email_user(subject, message)
+            
+            obj.newsletter_sended = True
+            super().save_model(request, obj, form, change)

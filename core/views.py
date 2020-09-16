@@ -30,6 +30,7 @@ def profile(request):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
+        'newsletter_subscription': user.profile.newsletter_subscription,
     }
 
     if request.method  == 'POST':
@@ -41,6 +42,7 @@ def profile(request):
             user.profile.first_name = form.cleaned_data.get('first_name')
             user.profile.last_name = form.cleaned_data.get('last_name')
             user.profile.email = form.cleaned_data.get('email')
+            user.profile.newsletter_subscription = form.cleaned_data.get('newsletter_subscription')
             user.save()
             
             if form.has_changed() and 'email' in form.changed_data:
@@ -95,6 +97,7 @@ def signup_view(request):
             user.profile.first_name = form.cleaned_data.get('first_name')
             user.profile.last_name = form.cleaned_data.get('last_name')
             user.profile.email = form.cleaned_data.get('email')
+            user.profile.newsletter_subscription = form.cleaned_data.get('newsletter_subscription')
             # user can't login until link confirmed
             user.is_active = False
             user.save()
