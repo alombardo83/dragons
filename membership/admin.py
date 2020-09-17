@@ -24,7 +24,7 @@ class MembershipPeriodInline(admin.StackedInline):
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
     list_display = ('member_number', 'get_last_name', 'get_first_name', 'is_active')
-    search_fields = ['get_last_name']
+    search_fields = ['person__last_name']
     fields = ('person', )
     inlines = [MembershipPeriodInline,]
 
