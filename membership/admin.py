@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.db.models import Max
-from .models import Period, MembershipPeriod, Member
+from django.forms.models import ModelChoiceField
+
 from datetime import datetime
+
+from .models import Period, MembershipPeriod, Member
+from contacts.models import Person
 
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
@@ -20,6 +24,13 @@ class MembershipPeriodInline(admin.StackedInline):
             'fields': ('comment',),
         }),
     )
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'period':
+            now = datetime.today()
+            queryset = Period.objects.filter(start_date__lte=now, end_date__gte=now)
+            return ModelChoiceField(queryset)
+        return super(MembershipPeriodInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
@@ -27,6 +38,12 @@ class MemberAdmin(admin.ModelAdmin):
     search_fields = ['person__last_name']
     fields = ('person', )
     inlines = [MembershipPeriodInline,]
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'person':
+            queryset = Person.objects.filter(member__isnull=True)
+            return ModelChoiceField(queryset)
+        return super(MemberAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:
