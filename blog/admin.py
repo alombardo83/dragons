@@ -46,7 +46,7 @@ class PostAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.pk:
             obj.author = request.user
-        
+
         send_newsletter = (not obj.newsletter_sended) and (obj.status == 1) and ((not obj.pk) or (form.has_changed() and 'status' in form.changed_data))
         super().save_model(request, obj, form, change)
         
@@ -62,7 +62,7 @@ class PostAdmin(admin.ModelAdmin):
                     'domain': current_site.domain,
                     'post': obj,
                 })
-                profile.user.email_user(subject, message)
+                profile.user.email_user(subject, '', html_message=message)
             
             obj.newsletter_sended = True
             super().save_model(request, obj, form, change)
