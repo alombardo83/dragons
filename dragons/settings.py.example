@@ -35,6 +35,7 @@ CREATED_APPS = [
     'contacts',
     'membership',
     'top14',
+    'subscription',
 ]
 
 INSTALLED_APPS = [
