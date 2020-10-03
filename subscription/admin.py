@@ -58,6 +58,21 @@ class CommandAdmin(admin.ModelAdmin):
     list_display = ('command_number', 'get_last_name', 'get_first_name')
     search_fields = ['client__person__last_name', 'client__person__first_name']
     
+    def _get_extra_context(self, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['name'] = 'Toi'
+        return extra_context
+    
+    def add_view(self, request, form_url='', extra_context=None):
+        return super().add_view(
+            request, form_url, extra_context=self._get_extra_context(extra_context),
+        )
+    
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        return super().change_view(
+            request, object_id, form_url, extra_context=self._get_extra_context(extra_context),
+        )
+    
     def get_last_name(self, obj):
         return obj.client.person.last_name
 
