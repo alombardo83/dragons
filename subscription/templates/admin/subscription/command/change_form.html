@@ -3,6 +3,45 @@
 {% block admin_change_form_document_ready %}
 {{ block.super }}
 <script>
-    alert('coucou {{ name }}')
+    (function($) {
+        var prices = {{ prices|safe }}
+        $('#id_price').prop('disabled', true);
+        $('#id_type').prop('disabled', true);
+        
+        $('.selector-price').change(function() {
+            var period = $('#id_period').val();
+            if (!period) {
+                return;
+            }
+            
+            start_date = prices[period].start_date.split('-');
+            start_date = new Date(start_date[0], start_date[1]-1, start_date[2]);
+            
+            end_date = prices[period].end_date.split('-');
+            end_date = new Date(end_date[0], end_date[1]-1, end_date[2]);
+            
+            var difference = end_date - start_date;
+            var days = difference / (1000*60*60*24);
+            if (days > 366) {
+                $('#id_type').val(2);
+            } else {
+                $('#id_type').val(1);
+            }
+            
+            var rate = $('#id_rate').val();
+            var tribune = $('#id_tribune').val();
+            if (!rate || !tribune) {
+                return;
+            }
+            
+            var price = prices[period].prices[tribune][rate].price;
+            $('#id_price').val(price);
+        });
+        
+        $('#command_form').submit(function(e) {
+            $('#id_price').prop('disabled', false);
+            $('#id_type').prop('disabled', false);
+        });
+    })(django.jQuery);
 </script>
 {% endblock %}

@@ -1,5 +1,8 @@
+from django import forms
 from django.contrib import admin
 from django.forms.models import ModelChoiceField
+from datetime import datetime
+import json
 
 from .models import Period, Tribune, Rate, TribuneRate, Client, Command
 from contacts.models import Person
@@ -57,10 +60,48 @@ class ClientAdmin(admin.ModelAdmin):
 class CommandAdmin(admin.ModelAdmin):
     list_display = ('command_number', 'get_last_name', 'get_first_name')
     search_fields = ['client__person__last_name', 'client__person__first_name']
+    fields = ('client', 'command_number', 'period', 'type', 'rate', 'tribune', 'rank', 'seat_number', 'price')
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        field = None
+        if db_field.name == 'period':
+            now = datetime.today()
+            queryset = Period.objects.filter(start_date__lte=now, end_date__gte=now)
+            field = ModelChoiceField(queryset = queryset)
+        else:
+            field = super(CommandAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        
+        if db_field.name in ['period', 'rate', 'tribune']:
+            field.widget = forms.Select(attrs={
+                'class': 'selector-price'
+            })
+        
+        return field
     
     def _get_extra_context(self, extra_context=None):
         extra_context = extra_context or {}
-        extra_context['name'] = 'Toi'
+        now = datetime.today()
+        periods = Period.objects.filter(start_date__lte=now, end_date__gte=now)
+        tribunes = Tribune.objects.all()
+        
+        prices = {}
+        for period in periods:
+            p = {
+                'start_date': period.start_date.isoformat(),
+                'end_date': period.end_date.isoformat(),
+                'prices': {}
+            }
+            for tribune in tribunes:
+                rates = TribuneRate.objects.filter(period__pk=period.pk, tribune__pk=tribune.pk)
+                t = {}
+                for rate in rates:
+                    t[str(rate.rate.pk)] = {
+                        'price': float(rate.price)
+                    }
+                p['prices'][str(tribune.pk)] = t
+            prices[str(period.pk)] = p
+        
+        extra_context['prices'] = json.dumps(prices)
         return extra_context
     
     def add_view(self, request, form_url='', extra_context=None):

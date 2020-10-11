@@ -66,7 +66,7 @@ class Command(models.Model):
     seat_number = models.IntegerField('numéro de siège')
     rate = models.ForeignKey(Rate, on_delete=models.CASCADE, related_name='commands')
     price = models.DecimalField('prix', max_digits=5, decimal_places=2)
-    type = models.IntegerField('type', choices=COMMAND_TYPE, default=1)
+    type = models.IntegerField('type', choices=COMMAND_TYPE)
     period = models.ForeignKey(Period, on_delete=models.CASCADE)
     
     class Meta:
@@ -75,3 +75,7 @@ class Command(models.Model):
 
     def __str__(self):
         return '{} {} ({})'.format(self.client.person.last_name, self.client.person.first_name, self.command_number)
+    
+    def clean(self):
+        print(self.price)
+        print(self.type)
