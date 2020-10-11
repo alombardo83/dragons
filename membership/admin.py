@@ -56,6 +56,11 @@ class MemberAdmin(admin.ModelAdmin):
             obj.member_number = '{:0>6}'.format(str(new_max_number))
         super().save_model(request, obj, form, change)
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return self.readonly_fields + ('person',)
+        return self.readonly_fields
+
     def get_last_name(self, obj):
         return obj.person.last_name
 
