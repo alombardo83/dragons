@@ -145,4 +145,15 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 LOGIN_REDIRECT_URL = '/'
 
 #Email
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_CONNECTION_DEFAULT = 'register'
+EMAIL_CONNECTIONS = {
+    'register': {
+        'backend': 'django.core.mail.backends.console.EmailBackend'
+    },
+    'newsletter': {
+        'backend': 'django.core.mail.backends.console.EmailBackend'
+    },
+    'message': {
+        'backend': 'django.core.mail.backends.console.EmailBackend'
+    },
+}

@@ -3,6 +3,8 @@ from django.contrib.auth import get_permission_codename
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.conf import settings
+
+from core.mail import get_connection
 from core.models import Profile
 from .models import Post, Comment
 
@@ -53,16 +55,21 @@ class PostAdmin(admin.ModelAdmin):
         if send_newsletter:
             current_site = get_current_site(request)
             subject = 'Newsletter - ' + obj.title
+            
+            with get_connection('newsletter') as connection:
+                from_email = None
+                if hasattr(connection, 'username'):
+                    from_email = connection.username
         
-            profiles = Profile.objects.filter(signup_confirmation=True, newsletter_subscription=True).all()
-            for profile in profiles:
-                message = render_to_string('blog/newsletter.html', {
-                    'profile': profile,
-                    'protocol': settings.PROTOCOL,
-                    'domain': current_site.domain,
-                    'post': obj,
-                })
-                profile.user.email_user(subject, '', html_message=message)
+                profiles = Profile.objects.filter(signup_confirmation=True, newsletter_subscription=True).all()
+                for profile in profiles:
+                    message = render_to_string('blog/newsletter.html', {
+                        'profile': profile,
+                        'protocol': settings.PROTOCOL,
+                        'domain': current_site.domain,
+                        'post': obj,
+                    })
+                    profile.user.email_user(subject, '', html_message=message, connection=connection)
             
             obj.newsletter_sended = True
             super().save_model(request, obj, form, change)

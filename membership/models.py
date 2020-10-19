@@ -1,5 +1,6 @@
 from django.db import models
 from contacts.models import Person
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class Period(models.Model):
     name = models.CharField('nom', max_length=50, unique=True)
@@ -35,3 +36,14 @@ class MembershipPeriod(models.Model):
     
     def __str__(self):
         return '{} - {}'.format(self.member, self.period)
+
+class Message(models.Model):
+    subject = models.CharField('sujet', max_length=50)
+    body = RichTextUploadingField('corps')
+    
+    class Meta:
+        verbose_name = 'message'
+        verbose_name_plural = 'messages'
+    
+    def __str__(self):
+        return self.subject

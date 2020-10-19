@@ -62,7 +62,11 @@ def profile(request):
                     # method will generate a hash value with user related data
                     'token': account_activation_token.make_token(user),
                 })
-                user.email_user(subject, message)
+                with get_connection('registration') as connection:
+                    from_email = None
+                    if hasattr(connection, 'username'):
+                        from_email = connection.username
+                    user.email_user(subject, message, connection=connection)
                 return redirect('activation_sent')
         else:
             print(form.errors)
@@ -114,7 +118,11 @@ def signup_view(request):
                 # method will generate a hash value with user related data
                 'token': account_activation_token.make_token(user),
             })
-            user.email_user(subject, message)
+            with get_connection('registration') as connection:
+                from_email = None
+                if hasattr(connection, 'username'):
+                    from_email = connection.username
+                user.email_user(subject, message, connection=connection)
             return redirect('activation_sent')
         else:
             print(form.errors)

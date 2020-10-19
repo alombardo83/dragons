@@ -1,11 +1,45 @@
 from django.contrib import admin
+from django.core.mail import send_mail
 from django.db.models import Max
 from django.forms.models import ModelChoiceField
+from django.template.loader import render_to_string
 
 from datetime import datetime
 
-from .models import Period, MembershipPeriod, Member
+from .models import Period, MembershipPeriod, Member, Message
+from core.mail import get_connection
 from contacts.models import Person
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('subject',)
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ['subject', 'body']
+        else:
+            return []
+    
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            message = render_to_string('membership/message.html', {
+                'content': obj.body
+            })
+            
+            now = datetime.today()
+            members = Member.objects.filter(membershipperiod__period__start_date__lte=now, membershipperiod__period__end_date__gte=now)
+            emails_to = []
+            for member in members:
+                email = member.person.email
+                if email:
+                    emails_to.append(email)
+            with get_connection('message') as connection:
+                from_email = None
+                if hasattr(connection, 'username'):
+                    from_email = connection.username
+                send_mail(obj.subject, '', from_email, emails_to, html_message=message, connection=connection)
+            
+        super().save_model(request, obj, form, change)
 
 @admin.register(Period)
 class PeriodAdmin(admin.ModelAdmin):
