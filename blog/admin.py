@@ -69,7 +69,10 @@ class PostAdmin(admin.ModelAdmin):
                         'domain': current_site.domain,
                         'post': obj,
                     })
-                    profile.user.email_user(subject, '', html_message=message, connection=connection)
+                    try:
+                        profile.user.email_user(subject, '', html_message=message, connection=connection)
+                    except Exception as err:
+                        print(err)     
             
             obj.newsletter_sended = True
             super().save_model(request, obj, form, change)
