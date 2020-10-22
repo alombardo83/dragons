@@ -34,7 +34,10 @@ class MessageAdmin(admin.ModelAdmin):
                 if hasattr(connection, 'username'):
                     from_email = connection.username
                 for emails in emails_to:
-                    send_mail(obj.subject, '', from_email, [emails], html_message=message, connection=connection)
+                    try:
+                        send_mail(obj.subject, '', from_email, [emails], html_message=message, connection=connection)
+                    except Exception as err:
+                        print(err)
             
         super().save_model(request, obj, form, change)
 
