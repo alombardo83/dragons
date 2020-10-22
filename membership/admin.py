@@ -27,17 +27,14 @@ class MessageAdmin(admin.ModelAdmin):
             })
             
             now = datetime.today()
-            members = Member.objects.filter(membershipperiod__period__start_date__lte=now, membershipperiod__period__end_date__gte=now)
-            emails_to = []
-            for member in members:
-                email = member.person.email
-                if email:
-                    emails_to.append(email)
+            emails_to = list(Member.objects.filter(membershipperiod__period__start_date__lte=now, membershipperiod__period__end_date__gte=now).values('person__email').distinct())
+            emails_to = [e['person__email'] for e in emails_to]
             with get_connection('message') as connection:
                 from_email = None
                 if hasattr(connection, 'username'):
                     from_email = connection.username
-                send_mail(obj.subject, '', from_email, emails_to, html_message=message, connection=connection)
+                for emails in emails_to:
+                    send_mail(obj.subject, '', from_email, [emails], html_message=message, connection=connection)
             
         super().save_model(request, obj, form, change)
 
