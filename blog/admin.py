@@ -8,6 +8,7 @@ from core.mail import get_connection
 from core.models import Profile
 from .models import Post, Comment
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('body', 'post', 'created_on', 'active')
@@ -24,6 +25,7 @@ class CommentAdmin(admin.ModelAdmin):
     def approve_comments(self, request, queryset):
         queryset.update(active=True)
     approve_comments.short_description = 'Approuvé les commentaires sélectionnés'
+
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):

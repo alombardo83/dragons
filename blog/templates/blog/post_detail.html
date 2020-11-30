@@ -22,7 +22,7 @@
     <div class="col-md-12 card mb-6  mt-4 ">
       <div class="card-body">
         <!-- comments -->
-        <h2>{{ comments.count }} commentaires</h2>
+        <h2>{{ comments.count }} commentaire{{ comments.count|pluralize }}</h2>
 
         {% for comment in comments %}
         <div class="comments" style="padding: 10px;">

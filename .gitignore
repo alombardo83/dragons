@@ -1,9 +1,10 @@
 *.pyc
 *~
 /.vscode
+/.idea
 __pycache__
 db.sqlite3
 /static_dragons
 .DS_Store
-/media_dragons/uploads/*
+/media_dragons/*
 /dragons/settings.py

@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
         {% block style %}
         {% endblock style %}
-	<script data-ad-client="ca-pub-6730999281555943" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     </head>
 
     <body>
@@ -35,6 +34,9 @@
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'post_list' %}">Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'gallery_list' %}">Galeries</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'top14_index' %}">Top 14</a>

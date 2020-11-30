@@ -36,6 +36,7 @@ CREATED_APPS = [
     'membership',
     'top14',
     'subscription',
+    'gallery',
 ]
 
 INSTALLED_APPS = [
@@ -66,7 +67,13 @@ ROOT_URLCONF = 'dragons.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'core/templates'), os.path.join(BASE_DIR, 'blog/templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'core/templates'),
+            os.path.join(BASE_DIR, 'blog/templates'),
+            os.path.join(BASE_DIR, 'subscription/templates'),
+            os.path.join(BASE_DIR, 'gallery/templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
