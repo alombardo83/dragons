@@ -5,11 +5,17 @@
 <script>
     (function($) {
         var prices = {{ prices|safe }}
-        $('#id_price').prop('disabled', true);
-        $('#id_type').prop('disabled', true);
-        
-        $('.selector-price').change(function() {
-            var period = $('#id_period').val();
+        $('input[id$="price"]').prop('disabled', true);
+        $('select[id$="type"]').prop('disabled', true);
+
+        $('select[id$="tribune"]').addClass('selector-price');
+        $('select[id$="rate"]').addClass('selector-price');
+        $('select[id$="period"]').addClass('selector-price');
+
+        $('.selector-price').change(function(e) {
+            var nbSubscription = e.target.id.split('-')[1];
+            var period = $(`#id_subscriptions-${nbSubscription}-period`).val();
+            console.log(period);
             if (!period) {
                 return;
             }
@@ -22,25 +28,21 @@
             
             var difference = end_date - start_date;
             var days = difference / (1000*60*60*24);
-            if (days > 366) {
-                $('#id_type').val(2);
-            } else {
-                $('#id_type').val(1);
-            }
+            $(`#id_subscriptions-${nbSubscription}-type`).val(days > 366 ? 2 : 1);
             
-            var rate = $('#id_rate').val();
-            var tribune = $('#id_tribune').val();
+            var rate = $(`#id_subscriptions-${nbSubscription}-rate`).val();
+            var tribune = $(`#id_subscriptions-${nbSubscription}-tribune`).val();
             if (!rate || !tribune) {
                 return;
             }
             
             var price = prices[period].prices[tribune][rate].price;
-            $('#id_price').val(price);
+            $(`#id_subscriptions-${nbSubscription}-price`).val(price);
         });
         
         $('#command_form').submit(function(e) {
-            $('#id_price').prop('disabled', false);
-            $('#id_type').prop('disabled', false);
+            $('input[id$="price"]').prop('disabled', false);
+            $('select[id$="type"]').prop('disabled', false);
         });
     })(django.jQuery);
 </script>
