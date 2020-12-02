@@ -1,9 +1,11 @@
-from django.contrib.auth import login, authenticate
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+import os
+
+from django.contrib.auth import login
+from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
 from django.contrib.auth.models import User
-from django.db import IntegrityError
+from django.http import HttpResponseForbidden, FileResponse
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -11,15 +13,19 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.conf import settings
 
+from core.mail import get_connection
 from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
+
 
 class HomePageView(generic.TemplateView):
     template_name = 'core/home.html'
 
+
 class ActivationSentView(generic.TemplateView):
     template_name = 'registration/activation_sent.html'
-    
+
+
 def profile(request):
     if not request.user.is_authenticated:
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
@@ -73,7 +79,8 @@ def profile(request):
     else:
         form = ProfileForm(data, instance=request.user)
     return render(request, 'core/profile.html', {'form': form})
-    
+
+
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -91,6 +98,7 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'registration/activation_invalid.html')
+
 
 def signup_view(request):
     if request.method  == 'POST':
@@ -129,3 +137,15 @@ def signup_view(request):
     else:
         form = SignUpForm()
     return render(request, 'core/signup.html', {'form': form})
+
+
+def media_access(request, path):
+    access_granted = False
+    user = request.user
+    if "public" in path or user.is_staff:
+        access_granted = True
+
+    if access_granted:
+        return FileResponse(open(os.path.join(settings.MEDIA_ROOT, path), 'rb'))
+    else:
+        return HttpResponseForbidden('Not authorized to access this media.')

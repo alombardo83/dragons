@@ -13,7 +13,7 @@ class GalleryList(generic.ListView):
 def gallery_detail(request, slug):
     template_name = 'gallery/gallery_detail.html'
     gallery = get_object_or_404(Gallery, slug=slug)
-    photos = GalleryImage.objects.filter(gallery=gallery)
+    photos = gallery.images.all()
     comments = gallery.comments.filter(active=True)
     new_comment = None
 

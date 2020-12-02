@@ -1,6 +1,7 @@
 from django.conf import settings
 import django.core.mail
 
+
 def get_connection(label=None, **kwargs):
     if label is None:
         label = getattr(settings, 'EMAIL_CONNECTION_DEFAULT', None)
