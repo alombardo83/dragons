@@ -144,7 +144,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # CKEditor
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
-CKEDITOR_UPLOAD_PATH = 'uploads/'
+CKEDITOR_UPLOAD_PATH = 'public/uploads/'
 CKEDITOR_ALLOW_NONIMAGE_FILES = False
 CKEDITOR_IMAGE_BACKEND = "pillow"
 
@@ -152,9 +152,9 @@ CKEDITOR_IMAGE_BACKEND = "pillow"
 LOGIN_REDIRECT_URL = '/'
 
 #Email
-EMAIL_CONNECTION_DEFAULT = 'register'
+EMAIL_CONNECTION_DEFAULT = 'registration'
 EMAIL_CONNECTIONS = {
-    'register': {
+    'registration': {
         'backend': 'django.core.mail.backends.console.EmailBackend'
     },
     'newsletter': {

@@ -21,7 +21,7 @@ class CommentAdmin(admin.ModelAdmin):
     approve_comments.short_description = 'Approuvé les commentaires sélectionnés'
 
 
-class GalleryImageAdmin(admin.StackedInline):
+class GalleryImageInline(admin.StackedInline):
     model = GalleryImage
 
 
@@ -31,7 +31,7 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ['title', ]
     prepopulated_fields = {'slug': ('title',)}
     fields = ('title', 'slug', 'description', 'cover')
-    inlines = [GalleryImageAdmin]
+    inlines = [GalleryImageInline]
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:

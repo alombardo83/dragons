@@ -6,7 +6,7 @@ class Gallery(models.Model):
     title = models.CharField('titre', max_length=250)
     slug = models.SlugField('slug', max_length=200, unique=True)
     description = models.TextField('description')
-    cover = models.FileField('couverture', blank=True)
+    cover = models.FileField('couverture', upload_to='public/gallery/covers')
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='galleries')
@@ -21,8 +21,8 @@ class Gallery(models.Model):
 
 
 class GalleryImage(models.Model):
-    gallery = models.ForeignKey(Gallery, default=None, on_delete=models.CASCADE)
-    image = models.FileField('image', upload_to='images/')
+    gallery = models.ForeignKey(Gallery, default=None, on_delete=models.CASCADE, related_name='images')
+    image = models.FileField('image', upload_to='public/gallery/images')
 
     class Meta:
         verbose_name = 'image'

@@ -2,6 +2,7 @@ from django.db import models
 from contacts.models import Person
 from ckeditor_uploader.fields import RichTextUploadingField
 
+
 class Period(models.Model):
     name = models.CharField('nom', max_length=50, unique=True)
     start_date = models.DateField('date de début')
@@ -14,6 +15,7 @@ class Period(models.Model):
     def __str__(self):
         return self.name
 
+
 class Member(models.Model):
     person = models.OneToOneField(Person, on_delete=models.CASCADE)
     member_number = models.CharField('numéro d\'adhérent', max_length=50, unique=True)
@@ -24,6 +26,7 @@ class Member(models.Model):
 
     def __str__(self):
         return '{} {} ({})'.format(self.person.last_name, self.person.first_name, self.member_number)
+
 
 class MembershipPeriod(models.Model):
     period = models.ForeignKey(Period, on_delete=models.CASCADE)
@@ -37,6 +40,7 @@ class MembershipPeriod(models.Model):
     def __str__(self):
         return '{} - {}'.format(self.member, self.period)
 
+
 class Message(models.Model):
     subject = models.CharField('sujet', max_length=50)
     body = RichTextUploadingField('corps')
@@ -47,3 +51,15 @@ class Message(models.Model):
     
     def __str__(self):
         return self.subject
+
+
+class Attachment(models.Model):
+    message = models.ForeignKey(Message, default=None, on_delete=models.CASCADE, related_name='attachments')
+    attachment = models.FileField('image', upload_to='protected/messages/attachments')
+
+    class Meta:
+        verbose_name = 'pièce jointe'
+        verbose_name_plural = 'pièces jointes'
+
+    def __str__(self):
+        return self.message.subject
