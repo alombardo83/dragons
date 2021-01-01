@@ -2,16 +2,18 @@ from django.core.exceptions import ValidationError
 from django.db import models
 import datetime
 
+
 def validate_birthday(value):
     if value > datetime.date.today():
         raise ValidationError('La date de naissance ne peut être postérieure à la date du jour')
 
+
 class Person(models.Model):
     first_name = models.CharField('prénom', max_length=50)
     last_name = models.CharField('nom', max_length=50)
-    birthdate = models.DateField('date de naissance', validators=[validate_birthday])
-    phone = models.CharField('téléphone', max_length=20)
-    email = models.EmailField('email', max_length=150)
+    birthdate = models.DateField('date de naissance', validators=[validate_birthday], null=True, blank=True)
+    phone = models.CharField('téléphone', max_length=20, null=True, blank=True)
+    email = models.EmailField('email', max_length=150, null=True, blank=True)
 
     class Meta:
         verbose_name = 'personne'
@@ -20,6 +22,7 @@ class Person(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
 
 class Address(models.Model):
     person = models.OneToOneField(
