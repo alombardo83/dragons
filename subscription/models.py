@@ -78,6 +78,7 @@ class Command(models.Model):
 
 
 class Subscription(models.Model):
+    beneficiary = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='subscriptions')
     tribune = models.ForeignKey(Tribune, on_delete=models.CASCADE, related_name='seats')
     rank = models.IntegerField('rang')
     seat_number = models.IntegerField('numéro de siège')
