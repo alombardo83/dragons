@@ -1,9 +1,11 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 
+
 class Message(models.Model):
     subject = models.CharField('sujet', max_length=50)
     body = RichTextUploadingField('corps')
+    sended = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'message'
