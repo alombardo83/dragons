@@ -13,4 +13,7 @@ def get_connection(label=None, **kwargs):
         print('Settings for connection "%s" were not found' % label)
 
     options.update(kwargs)
-    return django.core.mail.get_connection(**options)
+    connection = django.core.mail.get_connection(**options)
+    if not hasattr(connection, 'username'):
+        connection.username = None
+    return connection

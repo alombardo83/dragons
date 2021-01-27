@@ -23,10 +23,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Number of emails : %s' % len(messages)))
 
         with get_connection('message') as connection:
-            from_email = None
-            if hasattr(connection, 'username'):
-                from_email = connection.username
-
             for message in messages:
                 m = render_to_string('contacts_messages/message.html', {
                     'content': message.body
@@ -34,7 +30,7 @@ class Command(BaseCommand):
 
                 for i in range(0, len(emails_to), 50):
                     try:
-                        mail = EmailMultiAlternatives(subject=message.subject, from_email=from_email,
+                        mail = EmailMultiAlternatives(subject=message.subject, from_email=connection.username,
                                                       bcc=emails_to[i:i+50], connection=connection)
                         for file in message.attachments.all():
                             f = file.attachment
