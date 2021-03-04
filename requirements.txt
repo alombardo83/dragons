@@ -3,3 +3,5 @@ django-crispy-forms~=1.11.1
 django-ckeditor~=6.0.0
 Pillow~=8.1.0
 psycopg2~=2.8.6
+django-nested-inline~=0.4.2
+django-nested-admin~=3.3.3

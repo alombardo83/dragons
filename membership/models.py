@@ -1,4 +1,8 @@
+from datetime import datetime
+
 from django.db import models
+from django.db.models import Max
+
 from contacts.models import Person
 
 
@@ -25,6 +29,26 @@ class Member(models.Model):
 
     def __str__(self):
         return '{} {} ({})'.format(self.person.last_name, self.person.first_name, self.member_number)
+
+    def is_active(self):
+        now = datetime.today()
+        nb_actived_periods = self.membershipperiod_set.all().filter(period__start_date__lte=now,
+                                                                   period__end_date__gte=now).count()
+        if nb_actived_periods > 0:
+            return True
+        else:
+            return False
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            max_member_number = Member.objects.all().aggregate(Max('member_number'))['member_number__max']
+            new_max_number = None
+            if not max_member_number:
+                new_max_number = 1
+            else:
+                new_max_number = int(max_member_number) + 1
+            self.member_number = '{:0>6}'.format(str(new_max_number))
+        super(Member, self).save(*args, **kwargs)
 
 
 class MembershipPeriod(models.Model):

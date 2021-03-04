@@ -4,8 +4,9 @@ from django.forms.models import ModelChoiceField
 from datetime import datetime
 import json
 
+import nested_admin
+
 from .models import Period, Tribune, Rate, TribuneRate, Client, Command, Subscription
-from contacts.models import Person
 
 
 @admin.register(Period)
@@ -32,34 +33,9 @@ class TribuneAdmin(admin.ModelAdmin):
     inlines = [TribuneRateInline, ]
 
 
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('client_number', 'get_last_name', 'get_first_name')
-    search_fields = ['person__last_name']
-    fields = ('person', 'client_number', )
-    
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'person':
-            queryset = Person.objects.filter(client__isnull=True)
-            return ModelChoiceField(queryset)
-        return super(ClientAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj:
-            return self.readonly_fields + ('person',)
-        return self.readonly_fields
-
-    def get_last_name(self, obj):
-        return obj.person.last_name
-
-    def get_first_name(self, obj):
-        return obj.person.first_name
-    
-    get_last_name.short_description = 'Nom'
-    get_last_name.admin_order_field = 'person__last_name'
-    
-    get_first_name.short_description = 'Prénom'
-    get_first_name.admin_order_field = 'person__first_name'
+class ClientInline(nested_admin.NestedStackedInline):
+    model = Client
+    extra = 0
 
 
 class SubscriptionInline(admin.StackedInline):
