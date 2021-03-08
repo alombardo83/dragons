@@ -17,8 +17,8 @@ class PersonAdmin(nested_admin.NestedModelAdmin):
     search_fields = ['last_name']
     inlines = [
         AddressInline,
-        ClientInline,
         MemberInline,
+        ClientInline,
     ]
 
     def is_active(self, obj):

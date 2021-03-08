@@ -1,11 +1,9 @@
 from django.contrib import admin
-from django.db.models import Max
 from django.forms.models import ModelChoiceField
 
 from datetime import datetime
 
 import nested_admin
-from nested_admin.formsets import NestedInlineFormSet
 
 from .models import Period, MembershipPeriod, Member
 

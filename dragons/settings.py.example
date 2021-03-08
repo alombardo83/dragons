@@ -33,6 +33,7 @@ CREATED_APPS = [
     'core',
     'blog',
     'contacts',
+    'contacts_messages',
     'membership',
     'top14',
     'subscription',
@@ -49,6 +50,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ckeditor',
     'ckeditor_uploader',
+    'nested_admin',
 ] + CREATED_APPS
 
 MIDDLEWARE = [

@@ -42,7 +42,6 @@ class Member(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk:
             max_member_number = Member.objects.all().aggregate(Max('member_number'))['member_number__max']
-            new_max_number = None
             if not max_member_number:
                 new_max_number = 1
             else:
