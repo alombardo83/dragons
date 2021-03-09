@@ -72,7 +72,7 @@ def profile(request):
                     from_email = None
                     if hasattr(connection, 'username'):
                         from_email = connection.username
-                    user.email_user(subject, message, connection=connection)
+                    user.email_user(subject, message, from_email=from_email, connection=connection)
                 return redirect('activation_sent')
         else:
             print(form.errors)
@@ -130,7 +130,7 @@ def signup_view(request):
                 from_email = None
                 if hasattr(connection, 'username'):
                     from_email = connection.username
-                user.email_user(subject, message, connection=connection)
+                user.email_user(subject, message, from_email=from_email, connection=connection)
             return redirect('activation_sent')
         else:
             print(form.errors)
