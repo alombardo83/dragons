@@ -1,3 +1,5 @@
+from django.contrib.auth.models import DoesNotExist
+
 from .models import Match
 
 
@@ -17,68 +19,68 @@ def calculate_points_direct(team1, team2):
     try:
         match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
                                      team2__id=team2.id).get()
+    except DoesNotExist:
+        return
 
-        score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
-                                      match.conversions1)
-        score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
-                                      match.conversions2)
+    score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
+                                  match.conversions1)
+    score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
+                                  match.conversions2)
 
-        if score_team1 > score_team2:
-            team1.nb_points_direct += 4
-            team2.nb_points_direct += 0
-        elif score_team1 < score_team2:
-            team1.nb_points_direct += 0
-            team2.nb_points_direct += 4
-        else:
-            team1.nb_points_direct += 2
-            team2.nb_points_direct += 2
+    if score_team1 > score_team2:
+        team1.nb_points_direct += 4
+        team2.nb_points_direct += 0
+    elif score_team1 < score_team2:
+        team1.nb_points_direct += 0
+        team2.nb_points_direct += 4
+    else:
+        team1.nb_points_direct += 2
+        team2.nb_points_direct += 2
 
-        if calculate_bonus_offensive(match.tries1, match.tries2):
-            team1.nb_points_direct += 1
+    if calculate_bonus_offensive(match.tries1, match.tries2):
+        team1.nb_points_direct += 1
 
-        if calculate_bonus_defensive(score_team1, score_team2):
-            team1.nb_points_direct += 1
+    if calculate_bonus_defensive(score_team1, score_team2):
+        team1.nb_points_direct += 1
 
-        if calculate_bonus_offensive(match.tries2, match.tries1):
-            team2.nb_points_direct += 1
+    if calculate_bonus_offensive(match.tries2, match.tries1):
+        team2.nb_points_direct += 1
 
-        if calculate_bonus_defensive(score_team2, score_team1):
-            team2.nb_points_direct += 1
+    if calculate_bonus_defensive(score_team2, score_team1):
+        team2.nb_points_direct += 1
 
-        if match.withdrawn_team1:
-            team1.nb_points_direct -= 2
+    if match.withdrawn_team1:
+        team1.nb_points_direct -= 2
 
-        if match.withdrawn_team2:
-            team2.nb_points_direct -= 2
-    except:
-        pass
+    if match.withdrawn_team2:
+        team2.nb_points_direct -= 2
 
 
 def calculate_diff_direct(team1, team2):
     try:
         match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
                                      team2__id=team2.id).get()
+    except DoesNotExist:
+        return
 
-        score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
-                                      match.conversions1)
-        score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
-                                      match.conversions2)
+    score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
+                                  match.conversions1)
+    score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
+                                  match.conversions2)
 
-        team1.diff_direct += score_team1 - score_team2
-        team2.diff_direct += score_team2 - score_team1
-    except:
-        pass
+    team1.diff_direct += score_team1 - score_team2
+    team2.diff_direct += score_team2 - score_team1
 
 
 def calculate_tries_direct(team1, team2):
     try:
         match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
                                      team2__id=team2.id).get()
+    except DoesNotExist:
+        return
 
-        team1.nb_tries_direct += match.tries1
-        team2.nb_tries_direct += match.tries2
-    except:
-        pass
+    team1.nb_tries_direct += match.tries1
+    team2.nb_tries_direct += match.tries2
 
 
 def sort_ranking(ranking):
@@ -142,8 +144,7 @@ def sort_ranking(ranking):
         return simple_step(rank, ninth_step_needed, 'nb_withdrawn', reverse=False)
 
     def tenth_step(rank, tenth_step_needed):
-        res, need_next_step = simple_step(rank, tenth_step_needed, 'last_ranking', reverse=False)
-        return res
+        return simple_step(rank, tenth_step_needed, 'last_ranking', reverse=False)
 
     res, need_next_step = first_step(ranking)
     res, need_next_step = second_step(res, need_next_step)
@@ -154,4 +155,5 @@ def sort_ranking(ranking):
     res, need_next_step = seventh_step(res, need_next_step)
     res, need_next_step = eighth_step(res, need_next_step)
     res, need_next_step = ninth_step(res, need_next_step)
-    return tenth_step(res, need_next_step)
+    res, need_next_step = tenth_step(res, need_next_step)
+    return res
