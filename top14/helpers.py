@@ -3,13 +3,7 @@ from django.contrib.auth.models import DoesNotExist
 from .models import Match
 
 
-def calculate_points_direct(team1, team2):
-    try:
-        match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
-                                     team2__id=team2.id).get()
-    except DoesNotExist:
-        return
-
+def calculate_points_direct(match, team1, team2):
     if match.score_team1 > match.score_team2:
         team1.nb_points_direct += 4
         team2.nb_points_direct += 0
@@ -39,29 +33,24 @@ def calculate_points_direct(team1, team2):
         team2.nb_points_direct -= 2
 
 
-def calculate_diff_direct(team1, team2):
-    try:
-        match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
-                                     team2__id=team2.id).get()
-    except DoesNotExist:
-        return
-
+def calculate_diff_direct(match, team1, team2):
     team1.diff_direct += match.score_team1 - match.score_team2
     team2.diff_direct += match.score_team2 - match.score_team1
 
 
-def calculate_tries_direct(team1, team2):
-    try:
-        match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
-                                     team2__id=team2.id).get()
-    except DoesNotExist:
-        return
-
+def calculate_tries_direct(match, team1, team2):
     team1.nb_tries_direct += match.tries1
     team2.nb_tries_direct += match.tries2
 
 
-def sort_ranking(ranking):
+def get_match(matches, team1, team2):
+    for m in matches:
+        if m.team1 == team1 and m.team2 == team2:
+            return m
+    return None
+
+
+def sort_ranking(ranking, matches):
     def simple_step(rank, next_step_needed, attr, reverse=True):
         need_next_step = {}
         for index, need_rank in enumerate(next_step_needed):
@@ -75,7 +64,7 @@ def sort_ranking(ranking):
                 need_next_step[key]['max'] = need_rank['min'] + i
         return rank, [v for v in need_next_step.values() if v['min'] != v['max']]
 
-    def direct_step(rank, next_step_needed, attr, invoke):
+    def direct_step(rank, next_step_needed, attr, invoke, matches):
         need_next_step = {}
         for index, need_rank in enumerate(next_step_needed):
             sublist = rank[need_rank['min']:need_rank['max'] + 1]
@@ -83,8 +72,10 @@ def sort_ranking(ranking):
                 team1 = sublist[i]
                 for j in range(len(sublist) - i - 1):
                     team2 = sublist[i + j + 1]
-                    invoke(team1, team2)
-                    invoke(team2, team1)
+                    match = get_match(matches, team1, team2)
+                    if match:
+                        invoke(match, team1, team2)
+                        invoke(match, team2, team1)
             sublist = sorted(sublist, key=lambda t: getattr(t, attr), reverse=True)
             rank[need_rank['min']:need_rank['max'] + 1] = sublist
             for i, team in enumerate(sublist):
@@ -98,16 +89,16 @@ def sort_ranking(ranking):
         return simple_step(rank, [{'min': 0, 'max': 14}], 'nb_points')
 
     def second_step(rank, second_step_needed):
-        return direct_step(rank, second_step_needed, 'nb_points_direct', calculate_points_direct)
+        return direct_step(rank, second_step_needed, 'nb_points_direct', calculate_points_direct, matches)
 
     def third_step(rank, third_step_needed):
         return simple_step(rank, third_step_needed, 'diff')
 
     def fourth_step(rank, fourth_step_needed):
-        return direct_step(rank, fourth_step_needed, 'diff_direct', calculate_diff_direct)
+        return direct_step(rank, fourth_step_needed, 'diff_direct', calculate_diff_direct, matches)
 
     def fifth_step(rank, fifth_step_needed):
-        return direct_step(rank, fifth_step_needed, 'nb_tries_direct', calculate_tries_direct)
+        return direct_step(rank, fifth_step_needed, 'nb_tries_direct', calculate_tries_direct, matches)
 
     def sixth_step(rank, sixth_step_needed):
         return simple_step(rank, sixth_step_needed, 'diff_tries')
