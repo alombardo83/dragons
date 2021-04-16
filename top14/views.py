@@ -125,12 +125,10 @@ class MatchDisplay:
         self.short_name_team1 = match.team1.short_name
         self.short_name_team2 = match.team2.short_name
 
-        self.score_team1 = helpers.calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
-        self.score_team2 = helpers.calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
         self.bonus_offensive_team1 = helpers.calculate_bonus_offensive(match.tries1, match.tries2)
         self.bonus_offensive_team2 = helpers.calculate_bonus_offensive(match.tries2, match.tries1)
-        self.bonus_defensive_team1 = helpers.calculate_bonus_defensive(self.score_team1, self.score_team2)
-        self.bonus_defensive_team2 = helpers.calculate_bonus_defensive(self.score_team2, self.score_team1)
+        self.bonus_defensive_team1 = helpers.calculate_bonus_defensive(self.score1, self.score2)
+        self.bonus_defensive_team2 = helpers.calculate_bonus_defensive(self.score2, self.score1)
 
     def __getattr__(self, key):
         if hasattr(self.match, key):
