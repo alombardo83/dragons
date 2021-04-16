@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import gettext as _
 from .models import Season, Team, Match
-from . import helpers
 
 @admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
@@ -50,5 +49,5 @@ class MatchAdmin(admin.ModelAdmin):
     get_team2_name.short_description = 'Nom équipe extérieur'
     
     def get_score(self, obj):
-        return '{} - {}'.format(helpers.calculate_score(obj.drops1, obj.penalties1, obj.tries1, obj.conversions1), helpers.calculate_score(obj.drops2, obj.penalties2, obj.tries2, obj.conversions2))
+        return '{} - {}'.format(obj.score1, obj.score2)
     get_score.short_description = 'Score'
