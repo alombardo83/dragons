@@ -23,17 +23,16 @@ def index(request):
         }
 
         matches = Match.objects.filter(season__id=season.id, round=num_round).all()
-        for match in matches:
-            m = MatchDisplay(match)
+        for m in matches:
             round_matches['matches'].append(m)
             if m.played:
                 active_round = num_round
-                team1 = ranking[match.team1.id]
-                team2 = ranking[match.team2.id]
+                team1 = ranking[m.team1.id]
+                team2 = ranking[m.team2.id]
                 team1._compute_match_results(m.score_team1, m.score_team2, m.bonus_offensive_team1,
-                                             m.bonus_defensive_team1, m.withdrawn_team1, match.tries1, match.tries2)
+                                             m.bonus_defensive_team1, m.withdrawn_team1, m.tries1, m.tries2)
                 team2._compute_match_results(m.score_team2, m.score_team1, m.bonus_offensive_team2,
-                                             m.bonus_defensive_team2, m.withdrawn_team2, match.tries2, match.tries1)
+                                             m.bonus_defensive_team2, m.withdrawn_team2, m.tries2, m.tries1)
 
         display_matches.append(round_matches)
 
@@ -97,45 +96,3 @@ class TeamDisplay:
 
         if withdrawn:
             self.nb_withdrawn += 1
-
-
-class MatchDisplay:
-    match = None
-    date_time = datetime.today()
-
-    # Ces variables sont inutiles car on peut directement accéder à MatchDisplay.team1.name et MatchDisplay.team1.short_name, etc.
-    name_team1 = ''
-    name_team2 = ''
-    short_name_team1 = ''
-    short_name_team2 = ''
-
-    score_team1 = 0
-    score_team2 = 0
-    bonus_offensive_team1 = False
-    bonus_defensive_team1 = False
-    bonus_offensive_team2 = False
-    bonus_defensive_team2 = False
-
-    def __init__(self, match):
-        self.match = match
-
-        # Ces variables sont inutiles car on peut directement accéder à MatchDisplay.team1.name et MatchDisplay.team1.short_name, etc.
-        self.name_team1 = match.team1.name
-        self.name_team2 = match.team2.name
-        self.short_name_team1 = match.team1.short_name
-        self.short_name_team2 = match.team2.short_name
-
-        self.bonus_offensive_team1 = helpers.calculate_bonus_offensive(match.tries1, match.tries2)
-        self.bonus_offensive_team2 = helpers.calculate_bonus_offensive(match.tries2, match.tries1)
-        self.bonus_defensive_team1 = helpers.calculate_bonus_defensive(self.score1, self.score2)
-        self.bonus_defensive_team2 = helpers.calculate_bonus_defensive(self.score2, self.score1)
-
-    def __getattr__(self, key):
-        if hasattr(self.match, key):
-            return getattr(self.match, key)
-        return getattr(self, key)
-
-    def __setattr__(self, key, value):
-        if hasattr(self.match, key):
-            return setattr(self.match, key, value)
-        return setattr(self, key, value)
