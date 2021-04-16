@@ -100,8 +100,8 @@ class TeamDisplay:
 
 
 class MatchDisplay:
+    match = None
     date_time = datetime.today()
-    played = False
     name_team1 = ''
     name_team2 = ''
     short_name_team1 = ''
@@ -112,12 +112,9 @@ class MatchDisplay:
     bonus_defensive_team1 = False
     bonus_offensive_team2 = False
     bonus_defensive_team2 = False
-    withdrawn_team1 = False
-    withdrawn_team2 = False
 
     def __init__(self, match):
-        self.date_time = match.date_time
-        self.played = match.played
+        self.match = match
         self.name_team1 = match.team1.name
         self.name_team2 = match.team2.name
         self.short_name_team1 = match.team1.short_name
@@ -128,5 +125,13 @@ class MatchDisplay:
         self.bonus_offensive_team2 = helpers.calculate_bonus_offensive(match.tries2, match.tries1)
         self.bonus_defensive_team1 = helpers.calculate_bonus_defensive(self.score_team1, self.score_team2)
         self.bonus_defensive_team2 = helpers.calculate_bonus_defensive(self.score_team2, self.score_team1)
-        self.withdrawn_team1 = match.withdrawn_team1
-        self.withdrawn_team2 = match.withdrawn_team2
+
+    def __getattr__(self, key):
+        if hasattr(self.match, key):
+            return getattr(self.match, key)
+        return getattr(self, key)
+
+    def __setattr__(self, key, value):
+        if hasattr(self.match, key):
+            return setattr(self.match, key, value)
+        return setattr(self, key, value)
