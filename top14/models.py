@@ -86,3 +86,19 @@ class Match(models.Model):
     @property
     def score2(self):
         return 3 * self.drops2 + 3 * self.penalties2 + 5 * self.tries2 + 2 * self.conversions2
+
+    @property
+    def bonus_offensive_team1(self):
+        return self.tries1 >= self.tries2 + 3
+
+    @property
+    def bonus_offensive_team2(self):
+        return self.tries2 >= self.tries1 + 3
+
+    @property
+    def bonus_defensive_team1(self):
+        return self.score1 < self.score2 <= self.score1 + 5
+
+    @property
+    def bonus_defensive_team2(self):
+        return self.score2 < self.score1 <= self.score2 + 5
