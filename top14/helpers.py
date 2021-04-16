@@ -3,18 +3,6 @@ from django.contrib.auth.models import DoesNotExist
 from .models import Match
 
 
-def calculate_score(drops, penalties, tries, conversions):
-    return 3 * drops + 3 * penalties + 5 * tries + 2 * conversions
-
-
-def calculate_bonus_offensive(tries1, tries2):
-    return tries1 >= tries2 + 3
-
-
-def calculate_bonus_defensive(score1, score2):
-    return score1 < score2 <= score1 + 5
-
-
 def calculate_points_direct(team1, team2):
     try:
         match = Match.objects.filter(season__active=True, played=True, team1__id=team1.id,
