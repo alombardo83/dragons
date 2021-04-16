@@ -36,7 +36,7 @@ def index(request):
 
         display_matches.append(round_matches)
 
-    ranking = helpers.sort_ranking(list(ranking.values()))
+    ranking = helpers.sort_ranking(list(ranking.values()), matches)
     return render(request, template_name,
                   {'matches': display_matches, 'ranking': ranking, 'active_round': active_round - 1})
 
