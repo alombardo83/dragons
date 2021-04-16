@@ -1,5 +1,3 @@
-from django.contrib.auth.models import DoesNotExist
-
 from .models import Match
 
 
