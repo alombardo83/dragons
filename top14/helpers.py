@@ -48,7 +48,9 @@ def get_match(matches, team1, team2):
     return None
 
 
-def sort_ranking(ranking, matches):
+def sort_ranking(ranking):
+    matches = Match.objects.filter(season__active=True, played=True).all()
+
     def simple_step(rank, next_step_needed, attr, reverse=True):
         need_next_step = {}
         for index, need_rank in enumerate(next_step_needed):
@@ -62,7 +64,7 @@ def sort_ranking(ranking, matches):
                 need_next_step[key]['max'] = need_rank['min'] + i
         return rank, [v for v in need_next_step.values() if v['min'] != v['max']]
 
-    def direct_step(rank, next_step_needed, attr, invoke, matches):
+    def direct_step(rank, next_step_needed, attr, invoke):
         need_next_step = {}
         for index, need_rank in enumerate(next_step_needed):
             sublist = rank[need_rank['min']:need_rank['max'] + 1]
@@ -87,16 +89,16 @@ def sort_ranking(ranking, matches):
         return simple_step(rank, [{'min': 0, 'max': 14}], 'nb_points')
 
     def second_step(rank, second_step_needed):
-        return direct_step(rank, second_step_needed, 'nb_points_direct', calculate_points_direct, matches)
+        return direct_step(rank, second_step_needed, 'nb_points_direct', calculate_points_direct)
 
     def third_step(rank, third_step_needed):
         return simple_step(rank, third_step_needed, 'diff')
 
     def fourth_step(rank, fourth_step_needed):
-        return direct_step(rank, fourth_step_needed, 'diff_direct', calculate_diff_direct, matches)
+        return direct_step(rank, fourth_step_needed, 'diff_direct', calculate_diff_direct)
 
     def fifth_step(rank, fifth_step_needed):
-        return direct_step(rank, fifth_step_needed, 'nb_tries_direct', calculate_tries_direct, matches)
+        return direct_step(rank, fifth_step_needed, 'nb_tries_direct', calculate_tries_direct)
 
     def sixth_step(rank, sixth_step_needed):
         return simple_step(rank, sixth_step_needed, 'diff_tries')
