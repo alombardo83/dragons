@@ -41,15 +41,14 @@ def calculate_tries_direct(match, team1, team2):
     team2.nb_tries_direct += match.tries2
 
 
-def get_match(matches, team1, team2):
-    for m in matches:
-        if m.team1 == team1 and m.team2 == team2:
-            return m
-    return None
-
-
 def sort_ranking(ranking):
     matches = Match.objects.filter(season__active=True, played=True).all()
+
+    def get_match(team1, team2):
+        for m in matches:
+            if m.team1 == team1 and m.team2 == team2:
+                return m
+        return None
 
     def simple_step(rank, next_step_needed, attr, reverse=True):
         need_next_step = {}
@@ -72,7 +71,7 @@ def sort_ranking(ranking):
                 team1 = sublist[i]
                 for j in range(len(sublist) - i - 1):
                     team2 = sublist[i + j + 1]
-                    match = get_match(matches, team1, team2)
+                    match = get_match(team1, team2)
                     if match:
                         invoke(match, team1, team2)
                         invoke(match, team2, team1)
