@@ -22,10 +22,8 @@ def calculate_points_direct(team1, team2):
     except DoesNotExist:
         return
 
-    score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
-                                  match.conversions1)
-    score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
-                                  match.conversions2)
+    score_team1 = match.score1
+    score_team2 = match.score2
 
     if score_team1 > score_team2:
         team1.nb_points_direct += 4
@@ -63,10 +61,8 @@ def calculate_diff_direct(team1, team2):
     except DoesNotExist:
         return
 
-    score_team1 = calculate_score(match.drops1, match.penalties1, match.tries1,
-                                  match.conversions1)
-    score_team2 = calculate_score(match.drops2, match.penalties2, match.tries2,
-                                  match.conversions2)
+    score_team1 = match.score1
+    score_team2 = match.score2
 
     team1.diff_direct += score_team1 - score_team2
     team2.diff_direct += score_team2 - score_team1
