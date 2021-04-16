@@ -20,16 +20,16 @@ def calculate_points_direct(team1, team2):
         team1.nb_points_direct += 2
         team2.nb_points_direct += 2
 
-    if calculate_bonus_offensive(match.tries1, match.tries2):
+    if match.bonus_offensive_team1:
         team1.nb_points_direct += 1
 
-    if calculate_bonus_defensive(match.score_team1, match.score_team2):
+    if match.bonus_defensive_team1:
         team1.nb_points_direct += 1
 
-    if calculate_bonus_offensive(match.tries2, match.tries1):
+    if match.bonus_offensive_team2:
         team2.nb_points_direct += 1
 
-    if calculate_bonus_defensive(match.score_team2, match.score_team1):
+    if match.bonus_defensive_team2:
         team2.nb_points_direct += 1
 
     if match.withdrawn_team1:
