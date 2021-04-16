@@ -10,13 +10,10 @@ def calculate_points_direct(team1, team2):
     except DoesNotExist:
         return
 
-    score_team1 = match.score1
-    score_team2 = match.score2
-
-    if score_team1 > score_team2:
+    if match.score_team1 > match.score_team2:
         team1.nb_points_direct += 4
         team2.nb_points_direct += 0
-    elif score_team1 < score_team2:
+    elif match.score_team1 < match.score_team2:
         team1.nb_points_direct += 0
         team2.nb_points_direct += 4
     else:
@@ -26,13 +23,13 @@ def calculate_points_direct(team1, team2):
     if calculate_bonus_offensive(match.tries1, match.tries2):
         team1.nb_points_direct += 1
 
-    if calculate_bonus_defensive(score_team1, score_team2):
+    if calculate_bonus_defensive(match.score_team1, match.score_team2):
         team1.nb_points_direct += 1
 
     if calculate_bonus_offensive(match.tries2, match.tries1):
         team2.nb_points_direct += 1
 
-    if calculate_bonus_defensive(score_team2, score_team1):
+    if calculate_bonus_defensive(match.score_team2, match.score_team1):
         team2.nb_points_direct += 1
 
     if match.withdrawn_team1:
@@ -49,11 +46,8 @@ def calculate_diff_direct(team1, team2):
     except DoesNotExist:
         return
 
-    score_team1 = match.score1
-    score_team2 = match.score2
-
-    team1.diff_direct += score_team1 - score_team2
-    team2.diff_direct += score_team2 - score_team1
+    team1.diff_direct += match.score_team1 - match.score_team2
+    team2.diff_direct += match.score_team2 - match.score_team1
 
 
 def calculate_tries_direct(team1, team2):
