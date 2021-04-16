@@ -78,3 +78,11 @@ class Match(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.team1.name, self.team2.name)
+
+    @property
+    def score1(self):
+        return 3 * self.drops1 + 3 * self.penalties1 + 5 * self.tries1 + 2 * self.conversions1
+
+    @property
+    def score2(self):
+        return 3 * self.drops2 + 3 * self.penalties2 + 5 * self.tries2 + 2 * self.conversions2
