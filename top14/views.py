@@ -102,10 +102,13 @@ class TeamDisplay:
 class MatchDisplay:
     match = None
     date_time = datetime.today()
+
+    # Ces variables sont inutiles car on peut directement accéder à MatchDisplay.team1.name et MatchDisplay.team1.short_name, etc.
     name_team1 = ''
     name_team2 = ''
     short_name_team1 = ''
     short_name_team2 = ''
+
     score_team1 = 0
     score_team2 = 0
     bonus_offensive_team1 = False
@@ -115,10 +118,13 @@ class MatchDisplay:
 
     def __init__(self, match):
         self.match = match
+
+        # Ces variables sont inutiles car on peut directement accéder à MatchDisplay.team1.name et MatchDisplay.team1.short_name, etc.
         self.name_team1 = match.team1.name
         self.name_team2 = match.team2.name
         self.short_name_team1 = match.team1.short_name
         self.short_name_team2 = match.team2.short_name
+
         self.score_team1 = helpers.calculate_score(match.drops1, match.penalties1, match.tries1, match.conversions1)
         self.score_team2 = helpers.calculate_score(match.drops2, match.penalties2, match.tries2, match.conversions2)
         self.bonus_offensive_team1 = helpers.calculate_bonus_offensive(match.tries1, match.tries2)
