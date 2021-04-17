@@ -49,5 +49,5 @@ class MatchAdmin(admin.ModelAdmin):
     get_team2_name.short_description = 'Nom équipe extérieur'
     
     def get_score(self, obj):
-        return '{} - {}'.format(obj.score1, obj.score2)
+        return '{} - {}'.format(obj.score_team1, obj.score_team2)
     get_score.short_description = 'Score'

@@ -74,6 +74,8 @@ def sort_ranking(ranking):
                     match = get_match(team1, team2)
                     if match:
                         invoke(match, team1, team2)
+                    match = get_match(team2, team1)
+                    if match:
                         invoke(match, team2, team1)
             sublist = sorted(sublist, key=lambda t: getattr(t, attr), reverse=True)
             rank[need_rank['min']:need_rank['max'] + 1] = sublist

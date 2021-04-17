@@ -1,12 +1,11 @@
 from django.shortcuts import render
 from datetime import datetime
-from .models import Season, Match, Team, ROUNDS
+from .models import Match, Team, ROUNDS
 from . import helpers
 
 
 def index(request):
     template_name = 'top14/index.html'
-    season = Season.objects.filter(active=True).get()
 
     ranking = {}
     teams = Team.objects.filter(active=True).all()
@@ -22,7 +21,9 @@ def index(request):
             'matches': []
         }
 
-        matches = Match.objects.filter(season__id=season.id, round=num_round).all()
+        print('num round ' + str(num_round))
+        print('name round' + name_round)
+        matches = Match.objects.filter(season__active=True, round=num_round).all()
         for m in matches:
             round_matches['matches'].append(m)
             if m.played:
@@ -36,6 +37,7 @@ def index(request):
 
         display_matches.append(round_matches)
 
+    print('Coucou')
     ranking = helpers.sort_ranking(list(ranking.values()))
     return render(request, template_name,
                   {'matches': display_matches, 'ranking': ranking, 'active_round': active_round - 1})

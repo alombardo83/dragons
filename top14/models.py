@@ -80,6 +80,22 @@ class Match(models.Model):
         return '{} - {}'.format(self.team1.name, self.team2.name)
 
     @property
+    def name_team1(self):
+        return self.team1.name
+
+    @property
+    def name_team2(self):
+        return self.team2.name
+
+    @property
+    def short_name_team1(self):
+        return self.team1.short_name
+
+    @property
+    def short_name_team2(self):
+        return self.team2.short_name
+
+    @property
     def score_team1(self):
         return 3 * self.drops1 + 3 * self.penalties1 + 5 * self.tries1 + 2 * self.conversions1
 
@@ -97,8 +113,8 @@ class Match(models.Model):
 
     @property
     def bonus_defensive_team1(self):
-        return self.score1 < self.score2 <= self.score1 + 5
+        return self.score_team1 < self.score_team2 <= self.score_team1 + 5
 
     @property
     def bonus_defensive_team2(self):
-        return self.score2 < self.score1 <= self.score2 + 5
+        return self.score_team2 < self.score_team1 <= self.score_team2 + 5
