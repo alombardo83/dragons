@@ -32,8 +32,8 @@ class Member(models.Model):
 
     def is_active(self):
         now = datetime.today()
-        nb_actived_periods = self.membershipperiod_set.all().filter(period__start_date__lte=now,
-                                                                   period__end_date__gte=now).count()
+        nb_actived_periods = self.membershipperiod_set.filter(period__start_date__lte=now,
+                                                              period__end_date__gte=now).count()
         if nb_actived_periods > 0:
             return True
         else:
@@ -41,13 +41,13 @@ class Member(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            max_member_number = Member.objects.all().aggregate(Max('member_number'))['member_number__max']
+            max_member_number = Member.objects.aggregate(Max('member_number'))['member_number__max']
             if not max_member_number:
                 new_max_number = 1
             else:
                 new_max_number = int(max_member_number) + 1
             self.member_number = '{:0>6}'.format(str(new_max_number))
-        super(Member, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class MembershipPeriod(models.Model):

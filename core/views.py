@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
 from django.contrib.auth.models import User
-from django.http import HttpResponseForbidden, FileResponse
+from django.http import HttpResponseForbidden, FileResponse, HttpResponseNotFound
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -142,10 +142,14 @@ def signup_view(request):
 def media_access(request, path):
     access_granted = False
     user = request.user
-    if "public" in path or user.is_staff:
+    if "protected" not in path or user.is_staff:
         access_granted = True
 
     if access_granted:
-        return FileResponse(open(os.path.join(settings.MEDIA_ROOT, path), 'rb'))
+        path = os.path.join(settings.MEDIA_ROOT, path)
+        if os.path.exists(path):
+            return FileResponse(open(path, 'rb'))
+        else:
+            return HttpResponseNotFound('Media does not exists.')
     else:
         return HttpResponseForbidden('Not authorized to access this media.')

@@ -15,8 +15,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Send mails in queue'))
 
-        emails_to = list(Person.objects.exclude(email__isnull=True).exclude(email__exact='').values('email').distinct())
-        emails_to = [e['email'] for e in emails_to]
+        emails_to = list(Person.objects.exclude(email__isnull=True).exclude(email__exact='')
+                         .values_list('email', flat=True).distinct())
         self.stdout.write(self.style.SUCCESS('Number of contacts : %s' % len(emails_to)))
 
         messages = Message.objects.filter(sended=False).all()
@@ -28,14 +28,19 @@ class Command(BaseCommand):
                     'content': message.body
                 })
 
+                files = []
+                for file in message.attachments.all():
+                    f = file.attachment
+                    files.append((os.path.basename(f.name), f.read()))
+
                 for i in range(0, len(emails_to), 50):
                     try:
                         mail = EmailMultiAlternatives(subject=message.subject, from_email=connection.username,
                                                       bcc=emails_to[i:i+50], connection=connection)
-                        for file in message.attachments.all():
-                            f = file.attachment
-                            mail.attach(os.path.basename(f.name), f.read())
+
                         mail.attach_alternative(m, 'text/html')
+                        for file in files:
+                            mail.attach(*file)
                         mail.send()
                     except Exception as err:
                         self.stderr.write(self.style.ERROR(err))
