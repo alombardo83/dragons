@@ -1,7 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from django.conf.urls.static import static
-from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,3 +10,7 @@ urlpatterns = [
     path('gallery/', include('gallery.urls')),
     path('', include('core.urls')),
 ]
+
+handler404 = 'core.views.handler404'
+handler500 = 'core.views.handler500'
+handler403 = 'core.views.handler403'

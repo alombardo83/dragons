@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 from django.views import generic
 from django.conf import settings
 
+
 from core.mail import get_connection
 from .forms import SignUpForm, ProfileForm
 from .tokens import account_activation_token
@@ -142,7 +143,7 @@ def signup_view(request):
 def media_access(request, path):
     access_granted = False
     user = request.user
-    if "protected" not in path or user.is_staff:
+    if path.startswith('public/') or user.is_staff:
         access_granted = True
 
     if access_granted:
@@ -150,6 +151,24 @@ def media_access(request, path):
         if os.path.exists(path):
             return FileResponse(open(path, 'rb'))
         else:
-            return HttpResponseNotFound('Media does not exists.')
+            return handler404(request)
     else:
-        return HttpResponseForbidden('Not authorized to access this media.')
+        return handler403(request)
+
+
+def handler404(request, *args, **argv):
+    response = render(request, 'core/404.html')
+    response.status_code = 404
+    return response
+
+
+def handler500(request, *args, **argv):
+    response = render(request, 'core/500.html')
+    response.status_code = 500
+    return response
+
+
+def handler403(request, *args, **argv):
+    response = render(request, 'core/403.html')
+    response.status_code = 403
+    return response
