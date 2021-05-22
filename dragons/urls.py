@@ -1,8 +1,12 @@
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
 from django.urls import path, include
+
+from core.forms import PasswordResetWithCustomEmailForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("accounts/password_reset/", auth_views.PasswordResetView.as_view(form_class=PasswordResetWithCustomEmailForm)),
     path('accounts/', include('django.contrib.auth.urls')),
     path('blog/', include('blog.urls')),
     path('top14/', include('top14.urls')),
