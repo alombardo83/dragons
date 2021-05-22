@@ -1,10 +1,12 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.template import loader
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordResetForm
 
 from core.mail import get_connection
+from core.models import Profile
 
 
 class SignUpForm(UserCreationForm):
@@ -12,6 +14,12 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, label='Nom')
     email = forms.EmailField(max_length=150, label='Email')
     newsletter_subscription = forms.BooleanField(required=False, label='Souscription à la newsletter')
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Email déjà existant")
+        return email
 
     class Meta:
         model = User
@@ -41,6 +49,8 @@ class PasswordResetWithCustomEmailForm(PasswordResetForm):
         body = loader.render_to_string(email_template_name, context)
 
         with get_connection('registration') as connection:
+            if hasattr(connection, 'username'):
+                from_email = connection.username
             email_message = EmailMultiAlternatives(subject, body, from_email, [to_email], connection=connection)
             if html_email_template_name is not None:
                 html_email = loader.render_to_string(html_email_template_name, context)
