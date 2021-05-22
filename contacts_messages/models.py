@@ -1,11 +1,17 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 
+STATUS = (
+    (0, 'Non envoyé'),
+    (1, 'En cours d\'envoi'),
+    (2, 'Envoyé')
+)
+
 
 class Message(models.Model):
     subject = models.CharField('sujet', max_length=50)
     body = RichTextUploadingField('corps')
-    sended = models.BooleanField(default=False)
+    status = models.IntegerField('statut', choices=STATUS, default=0)
 
     class Meta:
         verbose_name = 'message'

@@ -10,7 +10,7 @@ class AttachmentInline(admin.StackedInline):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('subject', 'sended',)
+    list_display = ('subject', 'status',)
     inlines = [AttachmentInline]
     fields = ('subject', 'body',)
 

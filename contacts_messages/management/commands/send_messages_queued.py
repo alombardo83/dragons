@@ -1,4 +1,5 @@
 import os
+import time
 
 from django.core.management.base import BaseCommand
 from django.core.mail import EmailMultiAlternatives
@@ -19,8 +20,12 @@ class Command(BaseCommand):
                          .values_list('email', flat=True).distinct())
         self.stdout.write(self.style.SUCCESS('Number of contacts : %s' % len(emails_to)))
 
-        messages = Message.objects.filter(sended=False).all()
+        messages = Message.objects.filter(status=0).all()
         self.stdout.write(self.style.SUCCESS('Number of emails : %s' % len(messages)))
+
+        for message in messages:
+            message.status = 1
+            message.save()
 
         with get_connection('message') as connection:
             for message in messages:
@@ -33,10 +38,16 @@ class Command(BaseCommand):
                     f = file.attachment
                     files.append((os.path.basename(f.name), f.read()))
 
+                total = 0
                 for i in range(0, len(emails_to), 50):
+                    emails = emails_to[i:i+50]
+                    total = total + len(emails)
+                    if total > 200:
+                        time.sleep(3700)
+                        total = len(emails)
                     try:
                         mail = EmailMultiAlternatives(subject=message.subject, from_email=connection.username,
-                                                      bcc=emails_to[i:i+50], connection=connection)
+                                                      bcc=emails, connection=connection)
 
                         mail.attach_alternative(m, 'text/html')
                         for file in files:
@@ -45,7 +56,7 @@ class Command(BaseCommand):
                     except Exception as err:
                         self.stderr.write(self.style.ERROR(err))
 
-                message.sended = True
+                message.status = 2
                 message.save()
 
         self.stdout.write(self.style.SUCCESS('Finished'))
