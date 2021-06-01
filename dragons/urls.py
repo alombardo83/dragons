@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/password_reset/", auth_views.PasswordResetView.as_view(form_class=PasswordResetWithCustomEmailForm)),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('captcha/', include('captcha.urls')),
     path('blog/', include('blog.urls')),
     path('top14/', include('top14.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),

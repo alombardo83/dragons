@@ -10,22 +10,10 @@
                 <form id="signup-form" method="post" action="{% url 'signup' %}">
                     {% csrf_token %}
                     {{ form|crispy }}
-                    <button data-sitekey="6LesQcwaAAAAANvjwBOMslfLqELoR3MEjHiDbsbJ" data-callback='onSubmit'
-                            data-action='submit' class="btn btn-lg btn-primary btn-block g-recaptcha"
-                            type="submit">Connexion</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Connexion</button>
                 </form>
                 <p class="text-center mt-4"><a href="{% url 'login' %}">Déjà inscrit ?</a></p>
             </div>
         </div>
     </div>
 {%endblock%}
-
-{% block scripts %}
-    <!--script src="https://www.google.com/recaptcha/api.js"></script>
-    <script>
-function onSubmit(token) {
-    document.getElementById("signup-form").submit();
-}
-    </script-->
-
-{% endblock scripts %}

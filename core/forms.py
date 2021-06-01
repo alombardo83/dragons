@@ -5,8 +5,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordResetForm
 
-from core.mail import get_connection
-from core.models import Profile
+from captcha.fields import CaptchaField
+
+from .mail import get_connection
+from .widgets import BootstrapCaptchaTextInput
 
 
 class SignUpForm(UserCreationForm):
@@ -14,6 +16,7 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, label='Nom')
     email = forms.EmailField(max_length=150, label='Email')
     newsletter_subscription = forms.BooleanField(required=False, label='Souscription à la newsletter')
+    captcha = CaptchaField(widget=BootstrapCaptchaTextInput)
 
     def clean_email(self):
         email = self.cleaned_data['email']

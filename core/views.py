@@ -133,8 +133,6 @@ def signup_view(request):
                     from_email = connection.username
                 user.email_user(subject, message, from_email=from_email, connection=connection)
             return redirect('activation_sent')
-        else:
-            print(form.errors)
     else:
         form = SignUpForm()
     return render(request, 'core/signup.html', {'form': form})

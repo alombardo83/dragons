@@ -19,3 +19,7 @@ img {
 .custom-mr {
   margin-left: -46px;
 }
+/* Workaround a bug in crispy-forms not showing validation error from simple-captcha */
+.invalid-feedback {
+    display: block;
+}
