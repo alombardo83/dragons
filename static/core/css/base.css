@@ -21,5 +21,13 @@ img {
 }
 /* Workaround a bug in crispy-forms not showing validation error from simple-captcha */
 .invalid-feedback {
-    display: block;
+  display: block;
+}
+.captcha {
+  width: 20%;
+}
+#id_captcha_1.form-control {
+  width: 70%;
+  display: inline;
+  float: right;
 }

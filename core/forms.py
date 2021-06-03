@@ -16,6 +16,7 @@ class SignUpForm(UserCreationForm):
     last_name = forms.CharField(max_length=100, label='Nom')
     email = forms.EmailField(max_length=150, label='Email')
     newsletter_subscription = forms.BooleanField(required=False, label='Souscription à la newsletter')
+    #captcha = CaptchaField()
     captcha = CaptchaField(widget=BootstrapCaptchaTextInput)
 
     def clean_email(self):
