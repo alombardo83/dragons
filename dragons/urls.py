@@ -12,7 +12,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('top14/', include('top14.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-    path('gallery/', include('gallery.urls')),
+    path('gallery/', include('photologue.urls')),
     path('', include('core.urls')),
 ]
 

@@ -1,0 +1,37 @@
+{% extends "photologue/root.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'photologue/css/photologue.css' %}">
+{% endblock style %}
+
+{% block content %}
+    <!-- Gallery Entries Column -->
+    <div class="col-md-12 mt-4">
+        {% if object_list %}
+            {% for gallery in object_list %}
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">{{ gallery.title }}</h2>
+                        <p class="card-text">Publié le {{ gallery.date_added}}</p>
+                        {% if gallery.description %}
+                            <p class="card-text">{{ gallery.description|safe }}</p>
+                        {% endif %}
+                        <a href="{{ gallery.get_absolute_url }}" class="btn btn-primary">Voir la galerie &rarr;</a>
+                    </div>
+                    <div class="card-footer">
+                        {% for photo in gallery.sample %}
+                            <img src="{{ photo.get_thumbnail_url }}" class="thumbnail" alt="{{ photo.title }}">
+                        {% endfor %}
+                    </div>
+              </div>
+            {% endfor %}
+        {% else %}
+            <div class="row col-lg-12">Aucune galerie n'a été trouvée.</div>
+        {% endif %}
+    </div>
+
+    {% include "photologue/includes/paginator.html" %}
+
+{% endblock %}

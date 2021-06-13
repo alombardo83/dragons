@@ -7,8 +7,7 @@
 {% endblock style %}
 
 {% block content %}
-<div class="container">
-    <div class="row justify-content-center">
+    <div class="row col-md-12 justify-content-center">
         <div class="col-md-6 mt-4">
             <select class="form-control" id="roundSelect">
                 {% for match in matches %}
@@ -18,7 +17,7 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="row col-md-12">
         <div class="col-md-12 mt-5">
             {% for match in matches %}
                 <div class="match-pane" id="{{ match.round }}">
@@ -76,7 +75,7 @@
         </div>
     </div>
     
-    <div class="row">
+    <div class="row col-md-12">
         <div class="col-md-12 mt-5">
             <table class="table">
                 <thead>
@@ -112,7 +111,6 @@
             </table>
         </div>
     </div>
-</div>
 {%endblock%}
 
 {% block scripts %}

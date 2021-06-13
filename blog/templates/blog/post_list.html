@@ -1,21 +1,19 @@
 {% extends "base.html" %} 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <!-- Blog Entries Column -->
-        <div class="col-md-12 mt-4">
-            {% for post in post_list %}
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title">{{ post.title }}</h2>
-                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
-                    <!--<p class="card-text">{{post.content|safe|slice:":200" }}...</p>-->
-                    <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">En lire plus &rarr;</a>
-                </div>
+    <!-- Blog Entries Column -->
+    <div class="col-md-12 mt-4">
+        {% for post in post_list %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title">{{ post.title }}</h2>
+                <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+                <!--<p class="card-text">{{post.content|safe|slice:":200" }}...</p>-->
+                <a href="{% url 'post_detail' post.slug  %}" class="btn btn-primary">En lire plus &rarr;</a>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
+
     {% if is_paginated %}
       <nav aria-label="Page navigation container">
         <ul class="pagination justify-content-center">
@@ -28,5 +26,4 @@
         </ul>
       </nav>
     {% endif %}
-</div>
 {%endblock%}

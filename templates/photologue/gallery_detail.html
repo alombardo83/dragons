@@ -1,0 +1,38 @@
+{% extends "photologue/root.html" %}
+{% load i18n %}
+
+
+{% block meta %}
+<meta property="og:url" content="{{ gallery.get_absolute_url }}" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="{{ gallery.title }}" />
+{% if gallery.description %}
+	<meta property="og:description" content="{{ gallery.description }}" />
+{% endif %}
+{% endblock meta %}
+
+{% block content %}
+	<div id="carousel" class="col-md-12 mt-4 carousel slide" data-ride="carousel">
+		<ol class="carousel-indicators">
+			{% for p in gallery.public %}
+				<li data-target="#carousel" data-slide-to="{{ forloop.counter0 }}" class="{% if forloop.counter0 == 0 %} active {% endif %}"></li>
+			{% endfor %}
+		</ol>
+		<div class="carousel-inner">
+			{% for p in gallery.public %}
+				<div class="carousel-item {% if forloop.counter0 == 0 %} active {% endif %}">
+					<img class="d-block w-100" src="{{ p.image.url }}" alt="Slide">
+				</div>
+			{% endfor %}
+		</div>
+		<a class="carousel-control-prev" href="#carousel" role="button" data-slide="prev">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="sr-only">Précédente</span>
+		</a>
+		<a class="carousel-control-next" href="#carousel" role="button" data-slide="next">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="sr-only">Suivante</span>
+		</a>
+	</div>
+
+{% endblock %}

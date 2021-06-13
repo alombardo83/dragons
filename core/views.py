@@ -141,7 +141,7 @@ def signup_view(request):
 def media_access(request, path):
     access_granted = False
     user = request.user
-    if path.startswith('public/') or user.is_staff:
+    if path.startswith('public/') or path.startswith('photologue/') or user.is_staff:
         access_granted = True
 
     if access_granted:
