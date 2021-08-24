@@ -4,7 +4,16 @@ from ckeditor_uploader.fields import RichTextUploadingField
 STATUS = (
     (0, 'Non envoyé'),
     (1, 'En cours d\'envoi'),
-    (2, 'Envoyé')
+    (2, 'Envoyé'),
+    (3, 'Erreur')
+)
+
+LIST_RECEIVERS = (
+    (0, 'Tout le monde'),
+    (1, 'Adhérents'),
+    (2, 'Non adhérents'),
+#    (3, 'Abonnés'),
+#    (4, 'Non abonnés')
 )
 
 
@@ -12,6 +21,7 @@ class Message(models.Model):
     subject = models.CharField('sujet', max_length=50)
     body = RichTextUploadingField('corps')
     status = models.IntegerField('statut', choices=STATUS, default=0)
+    receivers = models.IntegerField('destinataires', choices=LIST_RECEIVERS, default=0)
 
     class Meta:
         verbose_name = 'message'

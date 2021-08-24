@@ -28,7 +28,7 @@ class Member(models.Model):
         verbose_name_plural = 'adhérents'
 
     def __str__(self):
-        return '{} {} ({})'.format(self.person.last_name, self.person.first_name, self.member_number)
+        return self.member_number
 
     def is_active(self):
         now = datetime.today()

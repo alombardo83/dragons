@@ -12,10 +12,10 @@ class AttachmentInline(admin.StackedInline):
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('subject', 'status',)
     inlines = [AttachmentInline]
-    fields = ('subject', 'body',)
+    fields = ('subject', 'receivers', 'body',)
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
-            return ['subject', 'body']
+            return ['subject', 'receivers', 'body']
         else:
             return []
